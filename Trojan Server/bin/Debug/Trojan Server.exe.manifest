@@ -264,14 +264,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Trojan Server.exe" size="8704">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Trojan Server.exe" size="9728">
       <assemblyIdentity name="Trojan Server" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>iQklipyDiZAihpn1qWqMUwGsOm4qFMGe/D9O3tzuJaA=</dsig:DigestValue>
+        <dsig:DigestValue>oZO6V78olQSK7eWoCmPMHDYViD4+yTcDO8KmlcI3/3A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
