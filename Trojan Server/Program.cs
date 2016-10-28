@@ -214,7 +214,11 @@ namespace Trojan_Server
         {
             FreeConsole();
             Log("Deleting old Log!" , "ALWAYS");
+try {
             File.Delete(GetTempPath() + "RATLog.txt");
+}
+catch {
+}
             bool Check = CheckIfRan();
             if (!Check)
             {
