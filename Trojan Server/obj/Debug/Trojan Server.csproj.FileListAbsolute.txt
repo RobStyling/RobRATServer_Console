@@ -1,12 +1,7 @@
 C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.exe.config
-C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.exe.manifest
-C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.application
 C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.exe
 C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.pdb
 C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan Server.csprojResolveAssemblyReference.cache
-C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan Server.TrustInfo.xml
-C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan Server.exe.manifest
-C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan Server.application
 C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan Server.exe
 C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan Server.pdb
 C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan Server.csprojResolveAssemblyReference.cache
