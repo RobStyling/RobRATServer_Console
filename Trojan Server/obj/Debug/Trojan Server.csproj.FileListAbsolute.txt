@@ -10,3 +10,8 @@ C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\obj\Debug\Trojan
 C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.exe.config
 C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.exe
 C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Trojan Server.pdb
+C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.dll
+C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.pdb
+C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.xml

