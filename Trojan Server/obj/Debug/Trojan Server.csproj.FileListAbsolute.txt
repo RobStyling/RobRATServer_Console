@@ -15,3 +15,8 @@ C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpR
 C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.pdb
 C:\Users\Admin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.xml
+C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.dll
+C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.pdb
+C:\Users\Robin\Documents\GitHub\TroServer_Console\Trojan Server\bin\Debug\SharpRaven.xml
